@@ -7,12 +7,12 @@
 //
 
 #include <iostream>
+#include "ATScene.h"
 
 int main(int argc, const char * argv[])
 {
-
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    ATScene ats;
+    ats.readInScene("test.txt");
     return 0;
 }
 
