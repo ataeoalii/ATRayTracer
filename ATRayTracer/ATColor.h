@@ -11,6 +11,7 @@ public:
 	ATColor(uint32_t colorValueARGB);
 	ATColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b);
 	ATColor(float a, float r, float g, float b);
+    ATColor(float r, float g, float b);
 
 	ATColor(const ATColor &copy);
 
@@ -32,9 +33,11 @@ public:
 	void setColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b);
 	void setColor(float a, float r, float g, float b);
 	void scaleColor(float scalar);
-
+    void clampColor();
+    
 	static ATColor multiply(ATColor col1, ATColor col2);
 	static ATColor addTwoColors(ATColor col1, ATColor col2);
+    
 };
 
 #endif

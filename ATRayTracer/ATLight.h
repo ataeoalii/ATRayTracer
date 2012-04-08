@@ -5,16 +5,13 @@
 
 class ATLight
 {
-private:
-	ATColor color;
-	ATVector3D position;
 public:
+    ATColor color;
+	ATVector3D position;
+    
+    ATLight();
 	ATLight(ATVector3D pos, ATColor col);
-	~ATLight(void);
-
-	ATColor getColor();
-	ATVector3D getPosition();
-	void setPosition(float x, float y, float z);
-	void setColor(float a, float r, float g, float b);
+    ATLight(const ATLight& copy);
+	~ATLight();
 };
 #endif

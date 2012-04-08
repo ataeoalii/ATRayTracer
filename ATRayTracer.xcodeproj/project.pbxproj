@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A0681FB1530AC4900C31A80 /* ATRay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A0681FA1530AC4900C31A80 /* ATRay.cpp */; };
 		3A070C04153000B90026FB89 /* ATScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070C03153000B90026FB89 /* ATScene.cpp */; };
 		3A070C06153002140026FB89 /* ATRaster3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070C01152FFB220026FB89 /* ATRaster3D.cpp */; };
 		3A070C07153002160026FB89 /* ATColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070BFF152FFAE00026FB89 /* ATColor.cpp */; };
 		3A070C081530021B0026FB89 /* ATVector3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070BEF152FDF5A0026FB89 /* ATVector3D.cpp */; };
 		3A070C0B153003050026FB89 /* ATLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070C09153002F30026FB89 /* ATLight.cpp */; };
-		3A070C1515301CC20026FB89 /* ATShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070C1415301CC20026FB89 /* ATShape.cpp */; };
 		3A070C1C15301ECF0026FB89 /* ATTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070C1A15301ECE0026FB89 /* ATTriangle.cpp */; };
 		3A070C20153022A70026FB89 /* ATSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070C1F153022A70026FB89 /* ATSphere.cpp */; };
 		3A070C22153022B10026FB89 /* ATPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A070C21153022B10026FB89 /* ATPlane.cpp */; };
@@ -32,6 +32,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A0681F81530AC3D00C31A80 /* ATRay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATRay.h; sourceTree = "<group>"; };
+		3A0681FA1530AC4900C31A80 /* ATRay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ATRay.cpp; sourceTree = "<group>"; };
 		3A070BEF152FDF5A0026FB89 /* ATVector3D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ATVector3D.cpp; sourceTree = "<group>"; };
 		3A070BF0152FDF5A0026FB89 /* ATVector3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATVector3D.h; sourceTree = "<group>"; };
 		3A070BFF152FFAE00026FB89 /* ATColor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ATColor.cpp; sourceTree = "<group>"; };
@@ -42,7 +44,6 @@
 		3A070C05153000C60026FB89 /* ATScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATScene.h; sourceTree = "<group>"; };
 		3A070C09153002F30026FB89 /* ATLight.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ATLight.cpp; sourceTree = "<group>"; };
 		3A070C0A153002F30026FB89 /* ATLight.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATLight.h; sourceTree = "<group>"; };
-		3A070C1415301CC20026FB89 /* ATShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ATShape.cpp; sourceTree = "<group>"; };
 		3A070C1615301CCF0026FB89 /* ATShape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATShape.h; sourceTree = "<group>"; };
 		3A070C1A15301ECE0026FB89 /* ATTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ATTriangle.cpp; sourceTree = "<group>"; };
 		3A070C1B15301ECF0026FB89 /* ATTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATTriangle.h; sourceTree = "<group>"; };
@@ -65,18 +66,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A0681FC1530C92700C31A80 /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				3A070C21153022B10026FB89 /* ATPlane.cpp */,
+				3A070C1F153022A70026FB89 /* ATSphere.cpp */,
+				3A070C1A15301ECE0026FB89 /* ATTriangle.cpp */,
+			);
+			name = Shapes;
+			sourceTree = "<group>";
+		};
 		3A070BF9152FFA910026FB89 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				3A070C0A153002F30026FB89 /* ATLight.h */,
-				3A070C02152FFB220026FB89 /* ATRaster3D.h */,
-				3A070C1B15301ECF0026FB89 /* ATTriangle.h */,
-				3A070C1D1530228C0026FB89 /* ATSphere.h */,
-				3A070C1E153022970026FB89 /* ATPlane.h */,
 				3A070C00152FFAE00026FB89 /* ATColor.h */,
+				3A070C0A153002F30026FB89 /* ATLight.h */,
+				3A070C1E153022970026FB89 /* ATPlane.h */,
+				3A070C02152FFB220026FB89 /* ATRaster3D.h */,
+				3A0681F81530AC3D00C31A80 /* ATRay.h */,
 				3A070C05153000C60026FB89 /* ATScene.h */,
-				3A070BF0152FDF5A0026FB89 /* ATVector3D.h */,
 				3A070C1615301CCF0026FB89 /* ATShape.h */,
+				3A070C1D1530228C0026FB89 /* ATSphere.h */,
+				3A070C1B15301ECF0026FB89 /* ATTriangle.h */,
+				3A070BF0152FDF5A0026FB89 /* ATVector3D.h */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -84,15 +96,13 @@
 		3A070BFA152FFA9F0026FB89 /* implementation */ = {
 			isa = PBXGroup;
 			children = (
-				3A070C01152FFB220026FB89 /* ATRaster3D.cpp */,
 				3A070BFF152FFAE00026FB89 /* ATColor.cpp */,
-				3A070C1A15301ECE0026FB89 /* ATTriangle.cpp */,
+				3A070C09153002F30026FB89 /* ATLight.cpp */,
+				3A0681FC1530C92700C31A80 /* Shapes */,
+				3A070C01152FFB220026FB89 /* ATRaster3D.cpp */,
+				3A0681FA1530AC4900C31A80 /* ATRay.cpp */,
 				3A070C03153000B90026FB89 /* ATScene.cpp */,
 				3A070BEF152FDF5A0026FB89 /* ATVector3D.cpp */,
-				3A070C09153002F30026FB89 /* ATLight.cpp */,
-				3A070C1F153022A70026FB89 /* ATSphere.cpp */,
-				3A070C21153022B10026FB89 /* ATPlane.cpp */,
-				3A070C1415301CC20026FB89 /* ATShape.cpp */,
 			);
 			name = implementation;
 			sourceTree = "<group>";
@@ -180,10 +190,10 @@
 				3A070C06153002140026FB89 /* ATRaster3D.cpp in Sources */,
 				3A070C0B153003050026FB89 /* ATLight.cpp in Sources */,
 				3A070C081530021B0026FB89 /* ATVector3D.cpp in Sources */,
-				3A070C1515301CC20026FB89 /* ATShape.cpp in Sources */,
 				3A070C1C15301ECF0026FB89 /* ATTriangle.cpp in Sources */,
 				3A070C20153022A70026FB89 /* ATSphere.cpp in Sources */,
 				3A070C22153022B10026FB89 /* ATPlane.cpp in Sources */,
+				3A0681FB1530AC4900C31A80 /* ATRay.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

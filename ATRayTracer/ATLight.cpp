@@ -1,33 +1,28 @@
 #include "ATLight.h"
 
+// default constructor
+ATLight::ATLight()
+{
+    position = ATVector3D(0.0f, 10.0f, 0.0f);
+    color = ATColor(1.0f, 1.0f, 1.0f, 1.0f);
+}
 
+// constructor specifies position/color
 ATLight::ATLight(ATVector3D pos, ATColor col)
 {
 	position = pos;
 	color = col;
 }
 
-
-ATLight::~ATLight(void)
+// copy constructor
+ATLight::ATLight(const ATLight& copy)
 {
+    position = copy.position;
+    color = copy.color;
 }
 
-ATColor ATLight::getColor()
+// destructor
+ATLight::~ATLight()
 {
-	return color;
-}
-
-ATVector3D ATLight::getPosition()
-{
-	return position;
-}
-
-void ATLight::setColor(float a, float r, float g, float b)
-{
-	color.setColor(a, r, g, b);
-}
-
-void ATLight::setPosition(float x, float y, float z)
-{
-	position = ATVector3D(x, y, z);
+    
 }

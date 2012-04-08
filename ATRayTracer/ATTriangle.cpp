@@ -40,3 +40,26 @@ ATTriangle::ATTriangle()
     
     color = ATColor(1.0f, 1.0f, 0.0f, 1.0f);
 }
+
+// destructor
+ATTriangle::~ATTriangle()
+{
+    
+}
+
+// determines where a ray intersects a triangle
+void ATTriangle::intersect(ATRay ray, float *intersectPt1, float *intersectPt2) const
+{
+    // TODO: implement this   
+}
+
+// determines the normal for a point in a triangle
+ATVector3D ATTriangle::pointNormal(ATVector3D point) const
+{ 
+    return ATVector3D::normalize(ATVector3D::crossProduct(vertA, vertB));
+}
+
+ATColor ATTriangle::getColor() const
+{
+    return color;
+}

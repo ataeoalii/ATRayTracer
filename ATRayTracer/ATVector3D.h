@@ -10,6 +10,7 @@ public:
 	ATVector3D(const ATVector3D &copy);
 	ATVector3D(float _x, float _y, float _z);
 	ATVector3D(float _x, float _y);
+    ~ATVector3D();
 
 	void addVector(ATVector3D atv);
 	void scaleVector(float scalar);
@@ -20,6 +21,7 @@ public:
 	static ATVector3D subtractTwoVectors(ATVector3D atv1, ATVector3D atv2);
 	static ATVector3D crossProduct(ATVector3D atv1, ATVector3D atv2);
 	static ATVector3D normalize(ATVector3D atv);
+    static float dot(ATVector3D atv1, ATVector3D atv2);
 };
 
 #endif

@@ -63,19 +63,6 @@ void ATRaster3D::setPixel(int index, ATColor color)
 }
 
 
-// Gets the height of the raster. 
-int ATRaster3D::getHeight()
-{
-	return height;
-}
-
-// Returns the width of the raster.
-int ATRaster3D::getWidth()
-{
-	return width;
-}
-
-
 // Gets the barycentric coordinates (using lambda1,2, and 3 as pointers to float.
 void ATRaster3D::GetBarycentricCoordinates(ATVector3D vect, ATVector3D atv1, ATVector3D atv2, ATVector3D atv3, float* lambda1, float* lambda2, float* lambda3)
 {
@@ -93,16 +80,6 @@ void ATRaster3D::GetBarycentricCoordinates(ATVector3D vect, ATVector3D atv1, ATV
 
 }
 
-// Returns the array of pixels that make up the raster.
-ATColor* ATRaster3D::getPixels()
-{
-	return rasterPixels;
-}
-
-float* ATRaster3D::getDepths()
-{
-	return depths;
-}
 
 float ATRaster3D::getDepth(unsigned int index)
 {
@@ -129,7 +106,7 @@ void ATRaster3D::blendPixel(int index, ATColor color, float alpha)
 }
 
 // Saves image in raster to PPM format
-void ATRaster3D::ATSaveToPPM(ATColor pixels[], int width, int height, char* path)
+void ATRaster3D::saveToPPM(ATColor pixels[], int width, int height, char* path)
 {
     // Open a file for writing
     FILE* f = fopen(path, "w");
@@ -162,7 +139,7 @@ void ATRaster3D::ATSaveToPPM(ATColor pixels[], int width, int height, char* path
 }
 
 // Saves image in raster BMP format
-void ATRaster3D::ATSaveToBMP(ATColor rasterPixels[], int rasterWidth, int rasterHeight, char* path)
+void ATRaster3D::saveToBMP(ATColor rasterPixels[], int rasterWidth, int rasterHeight, char* path)
 {
     //BMP (Windows V3)
     //Offset    Size    Description

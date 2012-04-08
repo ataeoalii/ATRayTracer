@@ -29,11 +29,6 @@ public:
 	~ATRaster3D();
 	ATRaster3D(int _width, int _height);
 
-	int getHeight();
-	int getWidth();
-	ATColor* getPixels();
-	
-	float* getDepths();
 	
 	float getDepth(unsigned int index);
 	
@@ -44,22 +39,11 @@ public:
 
 	void blendPixel(int index, ATColor color, float alpha);
 
-
-
 	static void GetBarycentricCoordinates(ATVector3D vect, ATVector3D atv1, ATVector3D atv2, ATVector3D atv3, float* lambda1, float* lambda2, float* lambda3);
 
+	static void saveToPPM(ATColor pixels[], int width, int height, char* path);
 
-	static void ATSaveToPPM(ATColor pixels[], int width, int height, char* path);
-
-	static void ATSaveToBMP(ATColor pixels[], int width, int height, char* path);
-
-	static ATColor calculateColor(ATColor ambientColor, ATColor materialColor, ATColor specularColor, const vector<ATLight> &lights,
-								ATVector3D normal, ATVector3D point, float shininess);
-
-	static void PhongInterpolateTriangle(ATRaster3D* raster, ATColor ambientColor, ATColor materialColor, ATColor specularColor, const vector<ATLight> &lights, int minX, int maxX, int minY, int maxY, float alpha, float shininess);
-
-	static void PhongInterpolateScene(ATRaster3D* raster, ATScene &scene, ATColor ambientColor);
-
+	static void saveToBMP(ATColor pixels[], int width, int height, char* path);
 
 };
 #endif
