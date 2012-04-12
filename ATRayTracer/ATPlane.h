@@ -12,6 +12,7 @@
 #include "ATVector3D.h"
 #include "ATColor.h"
 #include "ATRay.h"
+#include <math.h>
 
 class ATPlane : public ATShape
 {

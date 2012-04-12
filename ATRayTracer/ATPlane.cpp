@@ -39,7 +39,22 @@ ATPlane::~ATPlane()
 // determines if a point intersects the plane
 void ATPlane::intersect(ATRay ray, float* intersectPt1, float* intersectPt2) const
 {
+    *intersectPt2 = NAN;
+    float denom = ATVector3D::dot(ray.direction, normal);
+    if (fabsf(denom) < 0.00001f)
+    {
+        *intersectPt1 = NAN;
+        return;
+    }
     
+    float numerator = ATVector3D::dot(ATVector3D::subtractTwoVectors(origin, ray.origin), normal);
+    
+    float intersection = numerator / denom;
+    
+    if(intersection < 0.0f)
+        *intersectPt1 = NAN;
+    else 
+        *intersectPt1 = intersection;
 }
 
 // determines the normal for a point in a plane
