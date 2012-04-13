@@ -168,3 +168,39 @@ void ATScene::clearShapes()
 {
     shapes.clear();
 }
+
+// iterates through all objects in the scene and finds where the nearest intersection point is on the ray and
+// returns the nearest shape for that pixel/ray combination.
+ATShape* ATScene::sceneIntersect(ATRay ray, ATShape* startingShape, float* intersectionPt)
+{
+    if(shapes.size() == 0)
+        return NULL;
+    ATShape *currentShape = shapes.at(0);
+    float temp2 = NAN;
+    
+    currentShape->intersect(ray, intersectionPt, &temp2);
+    float tempIntersectPt = NAN;
+    
+    for(unsigned int i=1; i < shapes.size(); i++)
+    {
+        (shapes.at(i))->intersect(ray, &tempIntersectPt, &temp2);
+        if (!isnan(tempIntersectPt) && tempIntersectPt > 0.0f)
+        {
+            if(isnan(*intersectionPt))
+            {
+                *intersectionPt = tempIntersectPt;
+                currentShape = shapes.at(i);
+            }
+            else if(tempIntersectPt < *intersectionPt)
+            {
+                *intersectionPt = tempIntersectPt;
+                currentShape = shapes.at(i); 
+            }
+        }
+    }
+    
+    if (currentShape==startingShape)
+        return NULL;
+    return currentShape;
+    
+}

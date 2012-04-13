@@ -70,8 +70,12 @@
 			isa = PBXGroup;
 			children = (
 				3A070C21153022B10026FB89 /* ATPlane.cpp */,
+				3A070C1E153022970026FB89 /* ATPlane.h */,
+				3A070C1615301CCF0026FB89 /* ATShape.h */,
 				3A070C1F153022A70026FB89 /* ATSphere.cpp */,
+				3A070C1D1530228C0026FB89 /* ATSphere.h */,
 				3A070C1A15301ECE0026FB89 /* ATTriangle.cpp */,
+				3A070C1B15301ECF0026FB89 /* ATTriangle.h */,
 			);
 			name = Shapes;
 			sourceTree = "<group>";
@@ -81,13 +85,9 @@
 			children = (
 				3A070C00152FFAE00026FB89 /* ATColor.h */,
 				3A070C0A153002F30026FB89 /* ATLight.h */,
-				3A070C1E153022970026FB89 /* ATPlane.h */,
 				3A070C02152FFB220026FB89 /* ATRaster3D.h */,
 				3A0681F81530AC3D00C31A80 /* ATRay.h */,
 				3A070C05153000C60026FB89 /* ATScene.h */,
-				3A070C1615301CCF0026FB89 /* ATShape.h */,
-				3A070C1D1530228C0026FB89 /* ATSphere.h */,
-				3A070C1B15301ECF0026FB89 /* ATTriangle.h */,
 				3A070BF0152FDF5A0026FB89 /* ATVector3D.h */,
 			);
 			name = include;
@@ -98,7 +98,6 @@
 			children = (
 				3A070BFF152FFAE00026FB89 /* ATColor.cpp */,
 				3A070C09153002F30026FB89 /* ATLight.cpp */,
-				3A0681FC1530C92700C31A80 /* Shapes */,
 				3A070C01152FFB220026FB89 /* ATRaster3D.cpp */,
 				3A0681FA1530AC4900C31A80 /* ATRay.cpp */,
 				3A070C03153000B90026FB89 /* ATScene.cpp */,
@@ -126,9 +125,10 @@
 		3AAC4698152FBF38005EA8A2 /* ATRayTracer */ = {
 			isa = PBXGroup;
 			children = (
-				3AAC4699152FBF38005EA8A2 /* main.cpp */,
 				3A070BFA152FFA9F0026FB89 /* implementation */,
 				3A070BF9152FFA910026FB89 /* include */,
+				3AAC4699152FBF38005EA8A2 /* main.cpp */,
+				3A0681FC1530C92700C31A80 /* Shapes */,
 			);
 			path = ATRayTracer;
 			sourceTree = "<group>";

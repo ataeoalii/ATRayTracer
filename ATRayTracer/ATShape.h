@@ -16,6 +16,7 @@
 class ATShape
 {
 public:
+    ATShape(){}
     virtual void intersect(ATRay ray, float* intersectPt1, float* intersectPt2) const = 0;
     virtual ATVector3D pointNormal(ATVector3D point) const = 0;
     virtual ATColor getColor() const = 0;

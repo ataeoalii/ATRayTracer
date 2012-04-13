@@ -91,15 +91,15 @@ void ATTriangle::intersect(ATRay ray, float *intersectPt1, float *intersectPt2) 
     {
         *intersectPt1 = NAN;
     }
-    
 }
 
 // determines the normal for a point in a triangle
 ATVector3D ATTriangle::pointNormal(ATVector3D point) const
 { 
-    return ATVector3D::normalize(ATVector3D::crossProduct(vertA, vertB));
+    return ATVector3D::normalize(ATVector3D::crossProduct(vertA, vertC));
 }
 
+// gets the color of the triangle
 ATColor ATTriangle::getColor() const
 {
     return color;

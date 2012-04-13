@@ -47,5 +47,7 @@ public:
     
     void clearLights();
     void clearShapes();
+    
+    ATShape* sceneIntersect(ATRay ray, ATShape* startingShape, float* intersectionPt);
 };
 #endif
