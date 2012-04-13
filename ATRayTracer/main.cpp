@@ -26,21 +26,59 @@ int main(int argc, const char * argv[])
     return 0;
 }
 
+
+float planeEquationGetZ(ATVector3D normal, ATVector3D point, float x, float y)
+{
+    
+   return point.z - ((normal.x *(x - point.x) + normal.y*(y - point.y)) / normal.z) ;
+    
+}
+
 // traces rays across the scene and saves them in the raster
 void raytraceScene(ATScene& scene, ATRaster3D& raster)
 {
+    
+    
+    
     ATVector3D rayOrigin = scene.eyePt;    
     ATVector3D screenCenter = scene.spotPt;
     
     ATVector3D lookAt = ATVector3D::subtractTwoVectors(screenCenter, rayOrigin);
     
+    
+    // lookAt defines a normal to a plane
+    
+    
+    
+    // screenCenter is in the plane
+    // screenU and screenV are also in the plane
+    // screenV is offset by upVector in the plane
+    // screenU is the crossproduct of screenV and lookAt
+    
+    // find equation of the plane
+    
+    float upX = scene.upVector.x;
+    float upY = scene.upVector.y + screenCenter.y;
+    float upZ = planeEquationGetZ(lookAt, screenCenter, upX, upY );
+    
     float vscale = ATVector3D::magnitude(lookAt) * tanf(scene.fovy * 0.5f);
     
-    ATVector3D screenV = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(scene.upVector), vscale), screenCenter);
+    ATVector3D screenV = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(ATVector3D(upX, upY, upZ)), vscale), screenCenter);
     
     float uscale = scene.aspectRatio * ATVector3D::magnitude(screenV);
     
     ATVector3D screenU = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(ATVector3D::crossProduct(lookAt, screenV)), uscale), screenCenter);
+    
+    
+    screenV = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(ATVector3D::crossProduct(screenU, lookAt)), vscale), screenCenter);
+    
+    
+    
+    
+    
+    
+    
+    
     
     printf("lookat: %f %f %f\nscreenU: %f %f %f\nscreenV: %f %f %f\n", lookAt.x, lookAt.y, lookAt.z, screenU.x, screenU.y, screenU.z, screenV.x, screenV.y, screenV.z);
     
