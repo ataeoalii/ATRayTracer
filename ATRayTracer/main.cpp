@@ -15,14 +15,14 @@ void raytraceScene(ATScene&, ATRaster3D&);
 int main(int argc, const char * argv[])
 {
     ATScene ats;
-    ats.readInScene("test.txt");
+    ats.readInScene("scene.urt");
     
     ATRaster3D raster(ats.width, ats.height);
     
     raytraceScene(ats, raster);
 
-    ATRaster3D::saveToBMP(raster.rasterPixels, raster.width, raster.height, (char*)"boto.bmp");
-    ATRaster3D::saveToPPM(raster.rasterPixels, raster.width, raster.height, (char*)"boto.ppm");
+    ATRaster3D::saveToBMP(raster.rasterPixels, raster.width, raster.height, (char*)"iscene.bmp");
+    //ATRaster3D::saveToPPM(raster.rasterPixels, raster.width, raster.height, (char*)"boto.ppm");
     return 0;
 }
 
@@ -33,8 +33,18 @@ void raytraceScene(ATScene& scene, ATRaster3D& raster)
     ATVector3D screenCenter = scene.spotPt;
     
     ATVector3D lookAt = ATVector3D::subtractTwoVectors(screenCenter, rayOrigin);
-    ATVector3D screenV = ATVector3D::normalize(ATVector3D::crossProduct(lookAt, scene.upVector));
-    ATVector3D screenU = ATVector3D::normalize(ATVector3D::crossProduct(lookAt, screenV));
+    
+    float vscale = ATVector3D::magnitude(lookAt) * tanf(scene.fovy * 0.5f);
+    
+    ATVector3D screenV = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(scene.upVector), vscale), screenCenter);
+    
+    float uscale = scene.aspectRatio * ATVector3D::magnitude(screenV);
+    
+    ATVector3D screenU = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(ATVector3D::crossProduct(lookAt, screenV)), uscale), screenCenter);
+    
+    printf("lookat: %f %f %f\nscreenU: %f %f %f\nscreenV: %f %f %f\n", lookAt.x, lookAt.y, lookAt.z, screenU.x, screenU.y, screenU.z, screenV.x, screenV.y, screenV.z);
+    
+    
     for(int y = 0; y < raster.height; y++)
     {
         for(int x = 0; x < raster.width; x++)
@@ -75,16 +85,14 @@ void raytraceScene(ATScene& scene, ATRaster3D& raster)
                 ATVector3D lightDirection = ATVector3D::subtractTwoVectors(light.position, lightOrigin);
                 ATRay lightRay(lightOrigin, lightDirection);
                     
-                float shadowPt = NAN;
-                ATShape *obstructShape = scene.sceneIntersect(lightRay, nearestShape, &shadowPt);
+//                float shadowPt = NAN;
+//                ATShape *obstructShape = scene.sceneIntersect(lightRay, nearestShape, &shadowPt);
                     
-                if(isnan(shadowPt) || obstructShape==NULL)
-                {
-                    ATColor diffuseColor = ATColor::multiply(nearestShape->getColor(), light.color);
-                    diffuseColor.scaleColor(contribution);
-                    diffuseColor.clampColor();
-                    color = ATColor::addTwoColors(color, diffuseColor);
-                }
+                ATColor diffuseColor = ATColor::multiply(nearestShape->getColor(), light.color);
+                diffuseColor.scaleColor(contribution);
+                diffuseColor.clampColor();
+                color = ATColor::addTwoColors(color, diffuseColor);
+                
                     
                 color.clampColor();
                     

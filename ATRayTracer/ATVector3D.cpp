@@ -90,3 +90,13 @@ float ATVector3D::dot(ATVector3D atv1, ATVector3D atv2)
     float fl = atv1.x * atv2.x + atv1.y * atv2.y + atv1.z * atv2.z ;
     return fl;
 }
+
+ATVector3D ATVector3D::scaledVector(ATVector3D atv, float scalar)
+{
+    return ATVector3D(atv.x*scalar, atv.y*scalar, atv.z*scalar);
+}
+
+float ATVector3D::magnitude(ATVector3D atv)
+{
+    return sqrtf((atv.x*atv.x) + (atv.y*atv.y) + (atv.z*atv.z));
+}

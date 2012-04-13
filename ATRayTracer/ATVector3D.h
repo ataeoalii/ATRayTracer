@@ -21,6 +21,9 @@ public:
 	static ATVector3D subtractTwoVectors(ATVector3D atv1, ATVector3D atv2);
 	static ATVector3D crossProduct(ATVector3D atv1, ATVector3D atv2);
 	static ATVector3D normalize(ATVector3D atv);
+    static ATVector3D scaledVector(ATVector3D atv, float scalar);
+    
+    static float magnitude(ATVector3D atv);
     static float dot(ATVector3D atv1, ATVector3D atv2);
 };
 

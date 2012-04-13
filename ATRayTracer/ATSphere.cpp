@@ -66,14 +66,15 @@ void  ATSphere::intersect(ATRay ray, float* intersectPt1, float* intersectPt2) c
         *intersectPt1 = NAN;
         return;
     }
-    *intersectPt1 = farPt;
+    *intersectPt2 = farPt;
+    *intersectPt1 = nearPt;
     
     // inside sphere
     if ( nearPt < 0.0f)
     {
+        *intersectPt1 = farPt;
         *intersectPt2 = NAN;
     }
-    *intersectPt1 = nearPt;
     
 }
 

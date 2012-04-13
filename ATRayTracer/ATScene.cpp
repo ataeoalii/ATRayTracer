@@ -26,7 +26,7 @@ void ATScene::readInScene(string filename)
     FILE *file;
     file = fopen(filename.c_str(), "r");
     
-    if((filename.substr(filename.length()-3))!="xml")
+    if((filename.substr(filename.length()-3))!="urt")
     {
         printf("Warning: Incompatible Filetype - %s\n", filename.c_str());
     }
@@ -148,7 +148,7 @@ vector<ATShape*> ATScene::getShapes() const
 // adds a light to the end of the vector of lights
 void ATScene::addLight(ATLight light)
 {
-    
+    lights.push_back(light);
 }
 
 // adds a shape to the end of the vector of shapes
@@ -179,6 +179,7 @@ ATShape* ATScene::sceneIntersect(ATRay ray, ATShape* startingShape, float* inter
     float temp2 = NAN;
     
     currentShape->intersect(ray, intersectionPt, &temp2);
+    
     float tempIntersectPt = NAN;
     
     for(unsigned int i=1; i < shapes.size(); i++)
@@ -198,9 +199,7 @@ ATShape* ATScene::sceneIntersect(ATRay ray, ATShape* startingShape, float* inter
             }
         }
     }
-    
-    if (currentShape==startingShape)
-        return NULL;
+
     return currentShape;
     
 }
