@@ -55,24 +55,15 @@ void raytraceScene(ATScene& scene, ATRaster3D& raster)
     // screenV is offset by upVector in the plane
     // screenU is the crossproduct of screenV and lookAt
     
-    // find equation of the plane
     
-    float upX = scene.upVector.x;
-    float upY = scene.upVector.y + screenCenter.y;
-    float upZ = planeEquationGetZ(lookAt, screenCenter, upX, upY );
+    ATVector3D screenU = ATVector3D::normalize(ATVector3D::crossProduct(scene.upVector, lookAt));
     
-    float vscale = ATVector3D::magnitude(lookAt) * tanf(scene.fovy * 0.5f);
+    ATVector3D screenV = ATVector3D::normalize(ATVector3D::crossProduct(screenU, lookAt));
     
-    ATVector3D screenV = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(ATVector3D(upX, upY, upZ)), vscale), screenCenter);
+    screenV.scaleVector(ATVector3D::magnitude(lookAt) * tanf(scene.fovy*0.5f));
     
-    float uscale = scene.aspectRatio * ATVector3D::magnitude(screenV);
-    
-    ATVector3D screenU = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(ATVector3D::crossProduct(lookAt, screenV)), uscale), screenCenter);
-    
-    
-    screenV = ATVector3D::subtractTwoVectors(ATVector3D::scaledVector(ATVector3D::normalize(ATVector3D::crossProduct(screenU, lookAt)), vscale), screenCenter);
-    
-    
+    screenU.scaleVector(scene.aspectRatio * ATVector3D::magnitude(screenV));
+    screenU.scaleVector(-1.0f);
     
     
     
@@ -94,7 +85,7 @@ void raytraceScene(ATScene& scene, ATRaster3D& raster)
             ATVector3D v = screenV;
             v.scaleVector((float)y / (float)raster.height * 2.0f - 1.0f);
                 
-            ATVector3D rayDirection = ATVector3D::addTwoVectors(screenCenter, ATVector3D::addTwoVectors(u, v));
+            ATVector3D rayDirection = ATVector3D::addTwoVectors(lookAt, ATVector3D::addTwoVectors(u, v));
                 
             ATRay ray(rayOrigin, rayDirection);
             
@@ -113,19 +104,23 @@ void raytraceScene(ATScene& scene, ATRaster3D& raster)
                 float contribution = ATVector3D::dot(lightVector, normal);
                 if (contribution < 0.0f)
                     contribution = 0.0f;
+                
+                /*****SHADOWING******/
                     
                 // get point on object to cast ray to light
                 ATVector3D lightOrigin = ray.direction;
                 lightOrigin.scaleVector(int1);
                 lightOrigin = ATVector3D::addTwoVectors(ray.origin, lightOrigin);
                     
+               
+                
                 // get direction pointing towards the light
                 ATVector3D lightDirection = ATVector3D::subtractTwoVectors(light.position, lightOrigin);
                 ATRay lightRay(lightOrigin, lightDirection);
                     
 //                float shadowPt = NAN;
 //                ATShape *obstructShape = scene.sceneIntersect(lightRay, nearestShape, &shadowPt);
-                    
+                
                 ATColor diffuseColor = ATColor::multiply(nearestShape->getColor(), light.color);
                 diffuseColor.scaleColor(contribution);
                 diffuseColor.clampColor();
