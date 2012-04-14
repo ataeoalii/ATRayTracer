@@ -25,6 +25,12 @@ void ATScene::readInScene(string filename)
 {
     FILE *file;
     file = fopen(filename.c_str(), "r");
+
+    if (file==NULL)
+    {
+        printf("Error opening file %s!", filename.c_str());
+        exit(0);
+    }
     
     if((filename.substr(filename.length()-3))!="urt")
     {
@@ -38,6 +44,7 @@ void ATScene::readInScene(string filename)
     float spotX, spotY, spotZ;
     float upX, upY, upZ;
     float ambientRed, ambientGreen, ambientBlue;
+    
     
     fscanf(file, "%s", &magNum);
     fscanf(file, "%d %d", &width, &height);
@@ -175,15 +182,15 @@ ATShape* ATScene::sceneIntersect(ATRay ray, ATShape* startingShape, float* inter
 {
     if(shapes.size() == 0)
         return NULL;
-    ATShape *currentShape = shapes.at(0);
+    void* currentShape = NULL;
     float temp2 = NAN;
-    
-    currentShape->intersect(ray, intersectionPt, &temp2);
     
     float tempIntersectPt = NAN;
     
-    for(unsigned int i=1; i < shapes.size(); i++)
+    for(unsigned int i=0; i < shapes.size(); i++)
     {
+        if (shapes.at(i)==startingShape)
+            continue;
         (shapes.at(i))->intersect(ray, &tempIntersectPt, &temp2);
         if (!isnan(tempIntersectPt) && tempIntersectPt > 0.0f)
         {
@@ -199,7 +206,6 @@ ATShape* ATScene::sceneIntersect(ATRay ray, ATShape* startingShape, float* inter
             }
         }
     }
-
-    return currentShape;
+    return (ATShape*)currentShape;
     
 }

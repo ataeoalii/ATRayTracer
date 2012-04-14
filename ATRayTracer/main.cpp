@@ -10,19 +10,25 @@
 #include "ATScene.h"
 #include "ATRaster3D.h"
 
+
 void raytraceScene(ATScene&, ATRaster3D&);
 
 int main(int argc, const char * argv[])
 {
+    char *path=NULL;
+    size_t size = 0;
+    path=getcwd(path,size);
+    cout<<"\n current Path"<<path << endl;
+    
     ATScene ats;
-    ats.readInScene("scene.urt");
+    ats.readInScene("../../../../../scene.urt");
     
     ATRaster3D raster(ats.width, ats.height);
     
     raytraceScene(ats, raster);
 
-    ATRaster3D::saveToBMP(raster.rasterPixels, raster.width, raster.height, (char*)"iscene.bmp");
-    //ATRaster3D::saveToPPM(raster.rasterPixels, raster.width, raster.height, (char*)"boto.ppm");
+    ATRaster3D::saveToBMP(raster.rasterPixels, raster.width, raster.height, (char*)"../../../../../scene.bmp");
+    ATRaster3D::saveToPPM(raster.rasterPixels, raster.width, raster.height, (char*)"../../../../../scene.ppm");
     return 0;
 }
 
@@ -37,39 +43,18 @@ float planeEquationGetZ(ATVector3D normal, ATVector3D point, float x, float y)
 // traces rays across the scene and saves them in the raster
 void raytraceScene(ATScene& scene, ATRaster3D& raster)
 {
-    
-    
-    
     ATVector3D rayOrigin = scene.eyePt;    
     ATVector3D screenCenter = scene.spotPt;
     
     ATVector3D lookAt = ATVector3D::subtractTwoVectors(screenCenter, rayOrigin);
     
-    
-    // lookAt defines a normal to a plane
-    
-    
-    
-    // screenCenter is in the plane
-    // screenU and screenV are also in the plane
-    // screenV is offset by upVector in the plane
-    // screenU is the crossproduct of screenV and lookAt
-    
-    
     ATVector3D screenU = ATVector3D::normalize(ATVector3D::crossProduct(scene.upVector, lookAt));
     
     ATVector3D screenV = ATVector3D::normalize(ATVector3D::crossProduct(screenU, lookAt));
     
-    screenV.scaleVector(ATVector3D::magnitude(lookAt) * tanf(scene.fovy*0.5f));
+    screenV.scaleVector(ATVector3D::magnitude(lookAt) * tanf(scene.fovy*0.5f)/scene.aspectRatio);
     
-    screenU.scaleVector(scene.aspectRatio * ATVector3D::magnitude(screenV));
-    screenU.scaleVector(-1.0f);
-    
-    
-    
-    
-    
-    
+    screenU.scaleVector(-1.0f * scene.aspectRatio * ATVector3D::magnitude(screenV));
     
     printf("lookat: %f %f %f\nscreenU: %f %f %f\nscreenV: %f %f %f\n", lookAt.x, lookAt.y, lookAt.z, screenU.x, screenU.y, screenU.z, screenV.x, screenV.y, screenV.z);
     
@@ -94,38 +79,41 @@ void raytraceScene(ATScene& scene, ATRaster3D& raster)
                 
             if(!isnan(int1) && nearestShape!=NULL)
             {
-                ATLight light = scene.getLights()[0];
+                
                 ATColor color = ATColor::multiply(nearestShape->getColor(), scene.ambientColor);
                 ATVector3D intersectPt = ray.calculatePoint(int1);
                 ATVector3D normal = nearestShape->pointNormal(intersectPt);
-                ATVector3D lightVector = ATVector3D::normalize(ATVector3D::subtractTwoVectors(light.position, intersectPt));
-                    
-                    
-                float contribution = ATVector3D::dot(lightVector, normal);
-                if (contribution < 0.0f)
-                    contribution = 0.0f;
                 
-                /*****SHADOWING******/
-                    
-                // get point on object to cast ray to light
-                ATVector3D lightOrigin = ray.direction;
-                lightOrigin.scaleVector(int1);
-                lightOrigin = ATVector3D::addTwoVectors(ray.origin, lightOrigin);
-                    
-               
                 
-                // get direction pointing towards the light
-                ATVector3D lightDirection = ATVector3D::subtractTwoVectors(light.position, lightOrigin);
-                ATRay lightRay(lightOrigin, lightDirection);
+                ATColor diffuseColor(1.0f, 0.0f, 0.0f);
+                
+                for(unsigned long lightIdx=0; lightIdx<scene.getLights().size(); lightIdx++)
+                {
+                    ATLight light = scene.getLights()[lightIdx];
+                    ATVector3D lightVector = ATVector3D::normalize(ATVector3D::subtractTwoVectors(light.position, intersectPt));
                     
-//                float shadowPt = NAN;
-//                ATShape *obstructShape = scene.sceneIntersect(lightRay, nearestShape, &shadowPt);
-                
-                ATColor diffuseColor = ATColor::multiply(nearestShape->getColor(), light.color);
-                diffuseColor.scaleColor(contribution);
-                diffuseColor.clampColor();
-                color = ATColor::addTwoColors(color, diffuseColor);
-                
+                    /*****SHADOWING******/
+                    ATVector3D lightOrigin = intersectPt;
+                    
+                    // get direction pointing towards the light
+                    ATVector3D lightDirection = ATVector3D::normalize(ATVector3D::subtractTwoVectors(light.position, lightOrigin));
+                    ATRay lightRay(lightOrigin, lightDirection);
+                        
+                    float shadowPt = NAN;
+                    ATShape *obstructShape = scene.sceneIntersect(lightRay, nearestShape, &shadowPt);
+                    
+                    if(obstructShape==NULL)
+                    {
+                        float contribution = ATVector3D::dot(lightVector, normal);
+                        if (contribution < 0.0f)
+                            contribution = 0.0f;
+                        diffuseColor = ATColor::multiply(nearestShape->getColor(), light.color);
+                        diffuseColor.scaleColor(contribution);
+                        diffuseColor.clampColor();
+                        color = ATColor::addTwoColors(color, diffuseColor);
+                        color.clampColor();
+                    }
+                }
                     
                 color.clampColor();
                     
