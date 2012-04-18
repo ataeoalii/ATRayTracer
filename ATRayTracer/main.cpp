@@ -21,14 +21,14 @@ int main(int argc, const char * argv[])
     cout<<"\n current Path"<<path << endl;
     
     ATScene ats;
-    ats.readInScene("../../../../../scene.urt");
+    ats.readInScene("scene.urt");
     
     ATRaster3D raster(ats.width, ats.height);
     
     raytraceScene(ats, raster);
 
-    ATRaster3D::saveToBMP(raster.rasterPixels, raster.width, raster.height, (char*)"../../../../../scene.bmp");
-    ATRaster3D::saveToPPM(raster.rasterPixels, raster.width, raster.height, (char*)"../../../../../scene.ppm");
+    ATRaster3D::saveToBMP(raster.rasterPixels, raster.width, raster.height, (char*)"scene.bmp");
+    ATRaster3D::saveToPPM(raster.rasterPixels, raster.width, raster.height, (char*)"scene.ppm");
     return 0;
 }
 
@@ -52,7 +52,7 @@ void raytraceScene(ATScene& scene, ATRaster3D& raster)
     
     ATVector3D screenV = ATVector3D::normalize(ATVector3D::crossProduct(screenU, lookAt));
     
-    screenV.scaleVector(ATVector3D::magnitude(lookAt) * tanf(scene.fovy*0.5f)/scene.aspectRatio);
+    screenV.scaleVector(ATVector3D::magnitude(lookAt) * tanf(scene.fovy*0.5f));
     
     screenU.scaleVector(-1.0f * scene.aspectRatio * ATVector3D::magnitude(screenV));
     

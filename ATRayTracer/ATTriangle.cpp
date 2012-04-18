@@ -96,7 +96,7 @@ void ATTriangle::intersect(ATRay ray, float *intersectPt1, float *intersectPt2) 
 // determines the normal for a point in a triangle
 ATVector3D ATTriangle::pointNormal(ATVector3D point) const
 { 
-    return ATVector3D::normalize(ATVector3D::crossProduct(vertA, vertC));
+    return ATVector3D::normalize(ATVector3D::crossProduct(vertA, vertB));
 }
 
 // gets the color of the triangle
@@ -108,17 +108,39 @@ ATColor ATTriangle::getColor() const
 // Gets the barycentric coordinates (using lambda1, 2, and 3 as pointers to floats .)
 void ATTriangle::GetBarycentricCoordinates(ATVector3D vect, ATVector3D atv1, ATVector3D atv2, ATVector3D atv3, float* lambda1, float* lambda2, float* lambda3)
 {
-	float lambdaA = ((atv2.y - atv3.y)*(vect.x - atv3.x) + (atv3.x - atv2.x)*(vect.y - atv3.y)) / 
-    ((atv2.y - atv3.y)*(atv1.x - atv3.x) + ((atv3.x - atv2.x) * (atv1.y - atv3.y)));
+    ATVector3D bmina = ATVector3D::subtractTwoVectors(atv2, atv1);
+    ATVector3D cminb = ATVector3D::subtractTwoVectors(atv3, atv2);
+    ATVector3D bminp = ATVector3D::subtractTwoVectors(atv2, vect);
+    ATVector3D cminp = ATVector3D::subtractTwoVectors(atv3, vect);
     
-	float lambdaB = ((atv3.y - atv1.y)*(vect.x - atv3.x) + (atv1.x - atv3.x)*(vect.y - atv3.y)) / 
-    ((atv2.y - atv3.y)*(atv1.x - atv3.x) + ((atv3.x - atv2.x) * (atv1.y - atv3.y)));
+    ATVector3D aminc = ATVector3D::subtractTwoVectors(atv1, atv3);
+    ATVector3D aminp = ATVector3D::subtractTwoVectors(atv1, vect);
+
     
-	float lambdaC = 1.0f - lambdaA - lambdaB;
     
-    *lambda1 = lambdaA;
-    *lambda2 = lambdaB;
-    *lambda3 = lambdaC;
+    ATVector3D denom = ATVector3D::crossProduct(bmina, cminb);
+    ATVector3D lAnum = ATVector3D::crossProduct(bminp, cminb);
+    ATVector3D lBnum = ATVector3D::crossProduct(cminp, aminc);
+    ATVector3D lCnum = ATVector3D::crossProduct(aminp, bmina);
     
+	float lambdaA = ATVector3D::magnitude(lAnum)/ATVector3D::magnitude(denom);
+	float lambdaB = ATVector3D::magnitude(lBnum)/ATVector3D::magnitude(denom);
+	float lambdaC = ATVector3D::magnitude(lCnum)/ATVector3D::magnitude(denom);
+    
+    if(ATVector3D::dot(lAnum, denom) >= 0.0f)
+       *lambda1 = lambdaA;
+    else {
+        *lambda1 = lambdaA*-1.0f;
+    }
+    if(ATVector3D::dot(lBnum, denom) >= 0.0f)
+        *lambda2 = lambdaB;
+    else {
+        *lambda2 = lambdaB*-1.0f;
+    }
+    if(ATVector3D::dot(lCnum, denom) >= 0.0f)
+        *lambda3 = lambdaC;
+    else {
+        *lambda3 = lambdaC*-1.0f;
+    }
     
 }
