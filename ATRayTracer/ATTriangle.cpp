@@ -50,53 +50,117 @@ ATTriangle::~ATTriangle()
 // determines where a ray intersects a triangle
 void ATTriangle::intersect(ATRay ray, float *intersectPt1, float *intersectPt2) const
 {
-    // TODO: implement this
+    *intersectPt1 = NAN;
     *intersectPt2 = NAN;
+    ATVector3D u = ATVector3D::subtractTwoVectors(vertB, vertA);
+    ATVector3D v = ATVector3D::subtractTwoVectors(vertC, vertA);
+    ATVector3D n = ATVector3D::crossProduct(u, v);
     
-    ATVector3D normal = ATVector3D::crossProduct(ATVector3D::subtractTwoVectors(vertB, vertA), ATVector3D::subtractTwoVectors(vertC, vertA));
+    ATVector3D dir = ray.direction;
+    ATVector3D w;          // ray vectors
+    float     r, a, b;             // params to calc ray-plane intersect
     
-    float denom = ATVector3D::dot(ray.direction, normal);
-    if (fabsf(denom) < 0.00001f)
-    {
-        *intersectPt1 = NAN;
+    ATVector3D w0 = ATVector3D::subtractTwoVectors(ray.origin, vertA);
+
+    a = -(ATVector3D::dot(n,w0));
+    b = ATVector3D::dot(n,dir);
+    
+    if (fabsf(b) < 0.00001f) {     // ray is parallel to triangle plane            // ray lies in triangle plane
+            return;           // ray disjoint from plane
+    }
+    
+    // get intersect point of ray with triangle plane
+    r = a / b;
+    if (r < 0.0)                   // ray goes away from triangle
+        return;                  // => no intersect
+    // for a segment, also test if (r > 1.0) => no intersect
+    dir.scaleVector(r);
+    ATVector3D intersection = ATVector3D::addTwoVectors(ray.origin, dir);           // intersect point of ray and plane
+    
+    // is I inside T?
+    float    udotu, udotv, vdotv, wdotu, wdotv, denom;
+    udotu = ATVector3D::dot(u,u);
+    udotv = ATVector3D::dot(u,v);
+    vdotv = ATVector3D::dot(v,v);
+    w = ATVector3D::subtractTwoVectors(intersection, vertA);
+    wdotu = ATVector3D::dot(w,u);
+    wdotv = ATVector3D::dot(w,v);
+    
+    denom = udotv * udotv - udotu * vdotv;
+    
+    // get and test parametric coords
+    float s, t;
+    s = (udotv * wdotv - vdotv * wdotu) / denom;
+    if (s < 0.0 || s > 1.0)        // I is outside T
         return;
-    }
-    
-    float numerator = ATVector3D::dot(ATVector3D::subtractTwoVectors(vertA, ray.origin), normal);
-    
-    float intersection = numerator / denom;
-    
-    if(intersection < 0.0f)
-    {
-        *intersectPt1 = NAN;
+    t = (udotv * wdotu - udotu * wdotv) / denom;
+    if (t < 0.0 || (s + t) > 1.0)  // I is outside T
         return;
-    }
     
-    ATVector3D intersectVect = ray.direction;
-    intersectVect.scaleVector(intersection);
-    intersectVect = ATVector3D::addTwoVectors(ray.origin, intersectVect);
-    
-    float lambda1 = 0.0f;
-    float lambda2 = 0.0f;
-    float lambda3 = 0.0f;
-    
-    ATTriangle::GetBarycentricCoordinates(intersectVect, vertA, vertB, vertC, &lambda1, &lambda2, &lambda3);
+    if(r<=1.0f)
+    *intersectPt1 = r;                     // I is in T
     
     
-    if(lambda1 >= 0.0f && lambda2 >= 0.0f && lambda3 >= 0.0f)
-    {
-        *intersectPt1 = intersection;
-    }
-    else 
-    {
-        *intersectPt1 = NAN;
-    }
+    
+//    // TODO: implement this
+//    *intersectPt2 = NAN;
+//    
+//    ATVector3D normal = ATVector3D::crossProduct(ATVector3D::subtractTwoVectors(vertB, vertA), ATVector3D::subtractTwoVectors(vertC, vertA));
+//    
+//    float denom = ATVector3D::dot(ray.direction, normal);
+//    if (fabsf(denom) < 0.00001f)
+//    {
+//        *intersectPt1 = NAN;
+//        return;
+//    }
+//    
+//    float numerator = ATVector3D::dot(ATVector3D::subtractTwoVectors(vertA, ray.origin), normal);
+//    
+//    float intersection = numerator / denom;
+//    
+//    if(intersection < 0.0f)
+//    {
+//        *intersectPt1 = NAN;
+//        return;
+//    }
+//    
+//    ATVector3D intersectVect = ray.direction;
+//    intersectVect.scaleVector(intersection);
+//    intersectVect = ATVector3D::addTwoVectors(ray.origin, intersectVect);
+//    
+//    float lambda1 = 0.0f;
+//    float lambda2 = 0.0f;
+//    float lambda3 = 0.0f;
+//    
+//    ATTriangle::GetBarycentricCoordinates(intersectVect, vertA, vertB, vertC, &lambda1, &lambda2, &lambda3);
+//    
+//    
+//    if(lambda1 >= 0.0f && lambda2 >= 0.0f && lambda3 >= 0.0f)
+//    {
+//        *intersectPt1 = intersection;
+//    }
+//    else 
+//    {
+//        *intersectPt1 = NAN;
+//    }
 }
 
 // determines the normal for a point in a triangle
 ATVector3D ATTriangle::pointNormal(ATVector3D point) const
 { 
-    return ATVector3D::normalize(ATVector3D::crossProduct(vertA, vertB));
+    float lambda1 = 0.0f;
+    float lambda2 = 0.0f;
+    float lambda3 = 0.0f;
+    
+    ATTriangle::GetBarycentricCoordinates(point, vertA, vertB, vertC, &lambda1, &lambda2, &lambda3);
+    ATVector3D normA = ATVector3D::normalize(ATVector3D::crossProduct(vertA, vertB));
+    normA.scaleVector(lambda1);
+    ATVector3D normB = ATVector3D::normalize(ATVector3D::crossProduct(vertB, vertC));
+    normB.scaleVector(lambda2);
+    ATVector3D normC = ATVector3D::normalize(ATVector3D::crossProduct(vertC, vertA));
+    normC.scaleVector(lambda3);
+    
+    return ATVector3D::normalize(ATVector3D::addTwoVectors(normA, ATVector3D::addTwoVectors(normB, normC)));
 }
 
 // gets the color of the triangle
@@ -127,20 +191,23 @@ void ATTriangle::GetBarycentricCoordinates(ATVector3D vect, ATVector3D atv1, ATV
 	float lambdaB = ATVector3D::magnitude(lBnum)/ATVector3D::magnitude(denom);
 	float lambdaC = ATVector3D::magnitude(lCnum)/ATVector3D::magnitude(denom);
     
-    if(ATVector3D::dot(lAnum, denom) >= 0.0f)
-       *lambda1 = lambdaA;
+    if(ATVector3D::dot(denom, lAnum) > 0.0f)
+        *lambda1 = lambdaA;
     else {
-        *lambda1 = lambdaA*-1.0f;
+        *lambda1 = -MAXFLOAT;
     }
-    if(ATVector3D::dot(lBnum, denom) >= 0.0f)
+    
+    if(ATVector3D::dot(denom, lBnum) > 0.0f)
         *lambda2 = lambdaB;
     else {
-        *lambda2 = lambdaB*-1.0f;
+        *lambda2 = -MAXFLOAT;
     }
-    if(ATVector3D::dot(lCnum, denom) >= 0.0f)
+    
+    if(ATVector3D::dot(denom, lCnum) > 0.0f)
         *lambda3 = lambdaC;
     else {
-        *lambda3 = lambdaC*-1.0f;
+        *lambda3 = -MAXFLOAT;
     }
+
     
 }
